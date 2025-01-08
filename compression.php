@@ -1,5 +1,4 @@
 <?php
-
 namespace staifa\php_bandwidth_hero_proxy\compression;
 
 // Image compression
@@ -17,12 +16,19 @@ function process_image()
 
         $ctx["instances"] += ["image" => $inst];
 
-        if ($origin_type == "image/png" || "image/gif") {
-            $i_palette($inst);
-        };
-        if ($greyscale) {
-            $i_filter($inst, IMG_FILTER_GRAYSCALE);
-        };
+        // Get image dimensions
+        $image_width = imagesx($inst);
+        $image_height = imagesy($inst);
+
+        // Check if height is greater than 16383
+        if ($image_height > 16383) {
+            if ($origin_type == "image/png" || "image/gif") {
+                $i_palette($inst);
+            };
+            if ($greyscale) {
+                $i_filter($inst, IMG_FILTER_GRAYSCALE);
+            };
+        }
 
         ob_start();
 
