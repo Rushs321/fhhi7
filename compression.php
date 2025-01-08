@@ -22,9 +22,9 @@ function process_image()
 
         // Check if height is greater than 16383
         if ($image_height > 16383) {
-            // Resize the image height to 16383 while maintaining the original width
+            // Calculate new dimensions while maintaining aspect ratio
             $new_height = 16383;
-            $new_width = $image_width;
+            $new_width = intval(($new_height / $image_height) * $image_width);
 
             // Resize the image using GD library
             $src = $inst; // Assuming $inst is an image resource
