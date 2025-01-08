@@ -27,7 +27,7 @@ function process_image()
             $new_width = intval(($new_height / $image_height) * $image_width);
 
             // Resize the image
-            $i_resize($inst, $new_width, $new_height);
+            $inst = i_resize($inst, $new_width, $new_height);
         }
 
         if ($origin_type == "image/png" || "image/gif") {
@@ -56,3 +56,22 @@ function process_image()
         return $ctx;
     };
 };
+
+// Resize image function
+function i_resize($image, $new_width, $new_height)
+{
+    // Create a new true color image with the new dimensions
+    $resized_image = imagecreatetruecolor($new_width, $new_height);
+
+    // Get the original image dimensions
+    $original_width = imagesx($image);
+    $original_height = imagesy($image);
+
+    // Resize the original image into the new true color image
+    imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
+
+    // Destroy the original image
+    imagedestroy($image);
+
+    return $resized_image;
+}
