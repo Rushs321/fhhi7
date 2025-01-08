@@ -26,13 +26,8 @@ function process_image()
             $new_height = 16383;
             $new_width = intval(($new_height / $image_height) * $image_width);
 
-            // Resize the image using GD library
-            $src = $inst; // Assuming $inst is an image resource
-            $dst = imagecreatetruecolor($new_width, $new_height);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_width, $new_height, $image_width, $image_height);
-
-            // Replace the old image with the resized image
-            $inst = $dst;
+            // Resize the image
+            $i_resize($inst, $new_width, $new_height);
         }
 
         if ($origin_type == "image/png" || "image/gif") {
