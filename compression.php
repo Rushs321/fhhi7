@@ -22,13 +22,25 @@ function process_image()
 
         // Check if height is greater than 16383
         if ($image_height > 16383) {
-            if ($origin_type == "image/png" || "image/gif") {
-                $i_palette($inst);
-            };
-            if ($greyscale) {
-                $i_filter($inst, IMG_FILTER_GRAYSCALE);
-            };
+            // Resize the image height to 16383 while maintaining the original width
+            $new_height = 16383;
+            $new_width = $image_width;
+
+            // Resize the image using GD library
+            $src = $inst; // Assuming $inst is an image resource
+            $dst = imagecreatetruecolor($new_width, $new_height);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_width, $new_height, $image_width, $image_height);
+
+            // Replace the old image with the resized image
+            $inst = $dst;
         }
+
+        if ($origin_type == "image/png" || "image/gif") {
+            $i_palette($inst);
+        };
+        if ($greyscale) {
+            $i_filter($inst, IMG_FILTER_GRAYSCALE);
+        };
 
         ob_start();
 
