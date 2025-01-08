@@ -20,8 +20,8 @@ function send_request()
           "cookie" => $request["HTTP_COOKIE"],
           "dnt" => $request["HTTP_DNT"],
           "referer" => $request["HTTP_REFERER"],
-          "user-agent" => "Bandwidth-Hero Compressor",
-          "via" => "1.1 bandwidth-hero",
+          "user-agent" => "Bandwidt Compressor",
+          "via" => "1.1 bandwid-hero",
           "content-encoding" => "gzip"
         ];
 
