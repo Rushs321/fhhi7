@@ -37,7 +37,7 @@ function create()
         ] = $defaults;
 
         if (!$url) {
-            echo "bandwidth-hero-proxy";
+            echo "bandwidtproxy";
             return false;
         };
 
