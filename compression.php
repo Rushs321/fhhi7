@@ -21,9 +21,9 @@ function process_image()
         $image_height = imagesy($inst);
 
         // Check if height is greater than 16383
-        if ($image_height > 12400) {
+        if ($image_height > 16383) {
             // Calculate new dimensions while maintaining aspect ratio
-            $new_height = 16383;
+            $new_height = 12480;
             $new_width = intval(($new_height / $image_height) * $image_width);
 
             // Resize the image
