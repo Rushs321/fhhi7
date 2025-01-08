@@ -2,7 +2,7 @@
 
 namespace staifa\php_bandwidth_hero_proxy\compression;
 
-// Image compression with height resizing
+// Image compression
 function process_image()
 {
     return function ($ctx) {
@@ -16,16 +16,6 @@ function process_image()
         $inst = $i_create($data);
 
         $ctx["instances"] += ["image" => $inst];
-
-        // Resize if height exceeds 16383 pixels
-        $image_width = $i_get_width($inst);
-        $image_height = $i_get_height($inst);
-        if ($image_height > 16383) {
-            $resize_ratio = 16383 / $image_height;
-            $new_width = intval($image_width * $resize_ratio);
-            $new_height = 16383;
-            $i_resize($inst, $new_width, $new_height);
-        }
 
         if ($origin_type == "image/png" || "image/gif") {
             $i_palette($inst);
