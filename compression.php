@@ -22,12 +22,17 @@ function process_image()
 
         // Check if height is greater than 16383
         if ($image_height > 16383) {
-            // Calculate new dimensions while maintaining aspect ratio
-            $new_height = 12480;
-            $new_width = intval(($new_height / $image_height) * $image_width);
+            // Set new height to 16383 and keep width the same
+            $new_height = 16300;
+            $new_width = $image_width;
 
-            // Resize the image
-            $inst = i_resize($inst, $new_width, $new_height);
+            // Resize the image using GD library
+            $src = $inst; // Assuming $inst is an image resource
+            $dst = imagecreatetruecolor($new_width, $new_height);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_width, $new_height, $image_width, $image_height);
+
+            // Replace the old image with the resized image
+            $inst = $dst;
         }
 
         if ($origin_type == "image/png" || "image/gif") {
@@ -56,22 +61,3 @@ function process_image()
         return $ctx;
     };
 };
-
-// Resize image function
-function i_resize($image, $new_width, $new_height)
-{
-    // Create a new true color image with the new dimensions
-    $resized_image = imagecreatetruecolor($new_width, $new_height);
-
-    // Get the original image dimensions
-    $original_width = imagesx($image);
-    $original_height = imagesy($image);
-
-    // Resize the original image into the new true color image
-    imagecopyresampled($resized_image, $image, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
-
-    // Destroy the original image
-    imagedestroy($image);
-
-    return $resized_image;
-}
