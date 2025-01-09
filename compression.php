@@ -15,6 +15,17 @@ function process_image()
         $format = $webp ? "webp" : "jpeg";
         $inst = $i_create($data);
 
+        // Get the current image dimensions
+        $width = imagesx($inst);
+        $height = imagesy($inst);
+
+        // Check if the height exceeds 16383, and if so, resize
+        if ($height > 16383) {
+            $new_height = 16383;
+            $new_width = (int)($width * $new_height / $height);
+            $inst = imagescale($inst, $new_width, $new_height);
+        }
+
         $ctx["instances"] += ["image" => $inst];
 
         if ($origin_type == "image/png" || $origin_type == "image/gif") {
@@ -24,20 +35,12 @@ function process_image()
             $i_filter($inst, IMG_FILTER_GRAYSCALE);
         };
 
-        // Resize the image height to 16383 pixels
-        $new_height = 16383;
-        $original_width = imagesx($inst);
-        $original_height = imagesy($inst);
-        $new_width = ($new_height / $original_height) * $original_width;
-        $resized_inst = imagescale($inst, $new_width, $new_height);
-
         ob_start();
 
-        ($format == "webp") ? $i_webp($resized_inst, null, $quality) : $i_jpeg($resized_inst, null, $quality);
+        ($format == "webp") ? $i_webp($inst, null, $quality) : $i_jpeg($inst, null, $quality);
         $converted_image = ob_get_contents();
         ob_end_clean();
         $i_destroy($inst);
-        $i_destroy($resized_inst);
 
         array_walk($headers, fn ($v, $k) => $set_header($k . ": " . $v));
 
