@@ -14,28 +14,20 @@ function process_image()
         $format = $webp ? "webp" : "jpeg";
         $inst = $i_create($data);
 
-        $ctx["instances"] += ["image" => $inst];
+        // Get the current image dimensions
+        $width = imagesx($inst);
+        $height = imagesy($inst);
 
-        // Get image dimensions
-        $image_width = imagesx($inst);
-        $image_height = imagesy($inst);
-
-        // Check if height is greater than 16383
-        if ($image_height > 16383) {
-            // Set new height to 16383 and keep width the same
-            $new_height = 16300;
-            $new_width = $image_width;
-
-            // Resize the image using GD library
-            $src = $inst; // Assuming $inst is an image resource
-            $dst = imagecreatetruecolor($new_width, $new_height);
-            imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_width, $new_height, $image_width, $image_height);
-
-            // Replace the old image with the resized image
-            $inst = $dst;
+        // Check if the height exceeds 16383, and if so, resize
+        if ($height > 16383) {
+            $new_height = 16383;
+            $new_width = (int)($width * $new_height / $height);
+            $inst = imagescale($inst, $new_width, $new_height);
         }
 
-        if ($origin_type == "image/png" || "image/gif") {
+        $ctx["instances"] += ["image" => $inst];
+
+        if ($origin_type == "image/png" || $origin_type == "image/gif") {
             $i_palette($inst);
         };
         if ($greyscale) {
