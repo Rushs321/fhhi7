@@ -25,13 +25,11 @@ function process_image()
         };
 
         // Resize the image height to 16383 pixels
+        $new_height = 16383;
         $original_width = imagesx($inst);
         $original_height = imagesy($inst);
-        $new_height = 16383;
-        $new_width = ($original_width / $original_height) * $new_height;
-
-        $resized_inst = imagecreatetruecolor($new_width, $new_height);
-        imagecopyresampled($resized_inst, $inst, 0, 0, 0, 0, $new_width, $new_height, $original_width, $original_height);
+        $new_width = ($new_height / $original_height) * $original_width;
+        $resized_inst = imagescale($inst, $new_width, $new_height);
 
         ob_start();
 
